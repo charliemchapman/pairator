@@ -146,13 +146,17 @@ class PairList extends Component {
 
     return (
       <div className='main'>
+        <div className='gutter'/>
         <div className='bench'>
           {bench}
         </div>
         <div className='pair-list'>
           {pairDivs}
         </div>
-        <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
+        <div className='box'>
+          <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
+        </div>
+        <div className='gutter'/>
       </div>
     );
   }

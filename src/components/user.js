@@ -18,13 +18,19 @@ function collect(connect, monitor) {
 class User extends Component {
   render() {
     const { user, connectDragSource, isDragging, showLock=true } = this.props;
-    const display = isDragging ? 'none' : 'block';
-    const locked = user.locked && showLock ? '(locked)' : '';
-    const lockButton = showLock ? (<button onClick={()=>this.props.toggleLock(user.id)}>L</button>) : ''
+    const hidden = isDragging ? 'hidden' : '';
+    //const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
+    //const lockIcon = (<i className="material-icons">{locked}</i>)
+    //const lockButton = showLock ? (<button className='lock-button' onClick={()=>this.props.toggleLock(user.id)}>{lockIcon}</button>) : ''
+
+    const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
+    const lockIcon = (<i className={`material-icons ${locked}`}>{locked}</i>)
+    const lockButton = showLock ? (<button className='lock-button' onClick={()=>this.props.toggleLock(user.id)}>{lockIcon}</button>) : '';
+
     return connectDragSource(
-      <div style={{display:display}}>
+      <div className={`user ${hidden}`}>
         {lockButton}
-        <span style={{cursor:'move'}}>{user.name} {locked}</span>
+        <div className='name' style={{cursor:'move'}}>{user.name}</div>
       </div>)
   }
 }

@@ -3,8 +3,8 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  animation: App-logo-spin infinite 10s linear;
+  font-size: 5em;
 }
 
 .App-header {
@@ -42,8 +42,9 @@
 }
 
 .pairate-button{
-  padding:20px;
-  margin:20px;
+  margin: 5px 0px;
+  padding: 20px;
+  width: 100%;
 }
 
 .main{
@@ -57,4 +58,33 @@
 
 .pair-list{
 
+}
+
+.gutter{
+  display:flex;
+  flex-grow:1;
+}
+
+.lock-button{
+  background-color:transparent;
+  border:none;
+  outline:none;
+}
+
+.lock_outline{
+  color: #BB0000;
+}
+
+.lock_open{
+
+}
+
+.user{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.hidden{
+  display:none;
 }
