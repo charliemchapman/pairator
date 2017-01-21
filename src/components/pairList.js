@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
+import Bench from './bench';
 
 export const ItemTypes = {
   USER: 'user'
@@ -31,7 +32,8 @@ class PairList extends Component {
         4: {id: 4, name:'Charles', locked:true},
         5: {id: 5, name:'Beau', locked:false},
         6: {id: 6, name:'Chad', locked:true},
-        7: {id: 7, name:'Jim', locked:false}
+        7: {id: 7, name:'Jim', locked:false},
+        8: {id: 8, name:'Jeremy', locked:true}
       },
       stations: {
         1: {name:'Dev1'},
@@ -44,7 +46,8 @@ class PairList extends Component {
         {id:2, stationId:2, users:[3,4]},
         {id:3, stationId:3, users:[5,6]},
         {id:4, stationId:4, users:[7]}
-      ]
+      ],
+      benchUsers: [8]
     }
   }
 
@@ -63,13 +66,30 @@ class PairList extends Component {
     const newPairs = this.state.pairs.map(x=>{return {...x}})
     const newState = {...this.state, pairs: newPairs};
 
-    const removeFromPair = newState.pairs.find(p=>p.users.find(x=>x==userId));
-    removeFromPair.users = removeFromPair.users.filter(x=>x != userId);
+    this.removeUserFromAllLists(userId, newState);
 
     const addToPair = newState.pairs.find(p=>p.stationId===stationId);
     addToPair.users = [...addToPair.users, userId];
 
+    //unlock user
+    this.state.users[userId].locked = false;
+
     this.setState(newState);
+  }
+
+  benchUser(userId){
+    const newState = {...this.state, benchUsers: [...this.state.benchUsers, userId]};
+    this.removeUserFromAllLists(userId, newState)
+    this.setState(newState);
+  }
+
+  removeUserFromAllLists(userId, newState){
+    const removeFromPair = newState.pairs.find(p=>p.users.find(x=>x==userId));
+    if (removeFromPair){
+      removeFromPair.users = removeFromPair.users.filter(x=>x != userId);
+    } else {
+      newState.benchUsers = newState.benchUsers.filter(x=>x != userId)
+    }
   }
 
   pairate(){
@@ -119,10 +139,20 @@ class PairList extends Component {
         key={index}/>);
     })
 
+    const bench = (<Bench
+          benchUsers={this.state.benchUsers}
+          users={this.state.users}
+          benchUser={this.benchUser.bind(this)}/>);
+
     return (
-      <div className='pair-list'>
-        <button style={{padding: 20, margin:20}} onClick={pairate}>Pairate Humans</button>
-        {pairDivs}
+      <div className='main'>
+        <div className='bench'>
+          {bench}
+        </div>
+        <div className='pair-list'>
+          {pairDivs}
+        </div>
+        <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
       </div>
     );
   }

@@ -5,7 +5,7 @@ import User from './user';
 
 const pairTarget = {
   drop(props, monitor) {
-    props.moveUser(monitor.getItem().userId, props.pair.stationId);
+    props.benchUser(monitor.getItem().userId);
   }
 };
 
@@ -16,20 +16,20 @@ function collect(connect, monitor) {
   };
 }
 
-class Pair extends Component {
+class Bench extends Component {
   render() {
-    const { pair, users, stations, toggleLock, connectDropTarget, isOver } = this.props
+    const { benchUsers, users, connectDropTarget, isOver } = this.props
     const highlight = isOver ? 'highlight' : ''
-    const userDivs = pair.users.map((u,i)=>{
+    const userDivs = benchUsers.map((u,i)=>{
       const user = users[u];
-      return (<User user={user} toggleLock={()=>toggleLock(u)} key={i}/>)
+      return (<User user={user} showLock={false} key={i}/>)
     });
     return connectDropTarget(
       <div className={`box ${highlight}`}>
-        <div className='header'>{stations[pair.stationId].name}</div>
+        <div className='header'>Bench</div>
         {userDivs}
       </div>);
   }
 }
 
-export default DropTarget(ItemTypes.USER, pairTarget, collect)(Pair);
+export default DropTarget(ItemTypes.USER, pairTarget, collect)(Bench);

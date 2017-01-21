@@ -23,24 +23,38 @@
   to { transform: rotate(360deg); }
 }
 
-.pair-list{
-  margin-left:auto;
-  margin-right:auto;
-  width: 400px;
-}
-
-.pair{
+.box{
   text-align: left;
-  margin: 10px 0px;
+  margin: 10px 5px;
+  padding: 20px;
   border: 1px solid #ddd;
+  width: 200px;
 }
 
-.pair.highlight{
+.box.highlight{
   border:1px solid black;
   background-color: #ddd
 }
 
-.pair .station{
+.box .header{
   text-align: center;
   font-weight: bold;
+}
+
+.pairate-button{
+  padding:20px;
+  margin:20px;
+}
+
+.main{
+  display:flex;
+}
+
+.bench{
+  display:flex;
+  align-self: stretch;
+}
+
+.pair-list{
+
 }
