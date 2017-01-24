@@ -146,7 +146,7 @@ class PairList extends Component {
 
     return (
       <div>
-        <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
+        <button className='pairate-button' onClick={pairate}>Suggest a Switch!</button>
         <div className='main'>
           <div className='gutter'/>
           <div className='pair-list'>
