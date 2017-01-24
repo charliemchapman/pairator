@@ -19,9 +19,6 @@ class User extends Component {
   render() {
     const { user, connectDragSource, isDragging, showLock=true } = this.props;
     const hidden = isDragging ? 'hidden' : '';
-    //const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
-    //const lockIcon = (<i className="material-icons">{locked}</i>)
-    //const lockButton = showLock ? (<button className='lock-button' onClick={()=>this.props.toggleLock(user.id)}>{lockIcon}</button>) : ''
 
     const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
     const lockIcon = (<i className={`material-icons ${locked}`}>{locked}</i>)
@@ -29,6 +26,7 @@ class User extends Component {
 
     return connectDragSource(
       <div className={`user ${hidden}`}>
+        <div className='picture'/>
         {lockButton}
         <div className='name' style={{cursor:'move'}}>{user.name}</div>
       </div>)

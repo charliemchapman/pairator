@@ -28,7 +28,7 @@
   margin: 10px 5px;
   padding: 20px;
   border: 1px solid #ddd;
-  width: 200px;
+  width: 250px;
 }
 
 .box.highlight{
@@ -65,24 +65,69 @@
   flex-grow:1;
 }
 
+.usersBox{
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.user{
+  position: relative;
+  margin: 5px;
+  width: 110px;
+  height: 110px;
+  cursor: move;
+}
+
+.user .name{
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.picture{
+  height: 90px;
+  width: 90px;
+  background-image: url("https://s3.amazonaws.com/37assets/svn/1065-IMG_2529.jpg");
+  background-size: 100% 100%;
+  border-radius: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .lock-button{
   background-color:transparent;
   border:none;
   outline:none;
+  position: absolute;
+  left: 0;
+  top:0;
+  height: 30px;
+  width: 30px;
+  color: #FFF;
+  text-align: center;
+  vertical-align: center;
+  cursor: pointer;
+}
+
+.lock{
+
 }
 
 .lock_outline{
-  color: #BB0000;
+  border-radius: 50%;
+  background-color: #B00;
+  padding: 2px;
+  font-size: 18px;
 }
 
 .lock_open{
-
-}
-
-.user{
-  display:flex;
-  flex-direction: row;
-  align-items: center;
+  border-radius: 50%;
+  background-color: #BBB;
+  padding: 2px;
+  font-size: 18px;
 }
 
 .hidden{
