@@ -5,10 +5,7 @@
 .App-logo {
   font-size: 40px;
   margin-left: 5px;
-  margin-right: 10px;
-}
-
-.old{
+  margin-right: 5px;
   animation: App-logo-spin infinite 10s linear;
 }
 
@@ -116,7 +113,7 @@
 .picture{
   height: 90px;
   width: 90px;
-  background-image: url("https://s3.amazonaws.com/37assets/svn/1065-IMG_2529.jpg");
+  overflow: hidden;
   background-size: 100% 100%;
   border-radius: 50%;
   margin-left: auto;

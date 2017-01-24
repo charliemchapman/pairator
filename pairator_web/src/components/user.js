@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { DragSource } from 'react-dnd';
-import { ItemTypes } from '../constants'
+import { ItemTypes } from '../constants';
+import { UserImages } from '../resources';
 
 const userSource = {
   beginDrag(props) {
@@ -26,7 +27,7 @@ class User extends Component {
 
     return connectDragSource(
       <div className={`user ${hidden}`}>
-        <div className='picture'/>
+        <div className='picture'><img src={UserImages[user.picture]} height='100%' /></div>
         {lockButton}
         <div className='name' style={{cursor:'move'}}>{user.name}</div>
       </div>)

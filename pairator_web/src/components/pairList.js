@@ -26,14 +26,14 @@ class PairList extends Component {
     super(props);
     this.state = {
       users: {
-        1: {id: 1, name:'Charlie', locked:false},
-        2: {id: 2, name:'Greg', locked:false},
-        3: {id: 3, name:'Ray', locked:false},
-        4: {id: 4, name:'Charles', locked:true},
-        5: {id: 5, name:'Beau', locked:false},
-        6: {id: 6, name:'Chad', locked:true},
-        7: {id: 7, name:'Jim', locked:false},
-        8: {id: 8, name:'Jeremy', locked:true}
+        1: {id: 1, name:'Charlie', locked:false, picture:'charlie'},
+        2: {id: 2, name:'Greg', locked:false, picture:'greg'},
+        3: {id: 3, name:'Ray', locked:false, picture:'ray'},
+        4: {id: 4, name:'Charles', locked:true, picture:'charles'},
+        5: {id: 5, name:'Beau', locked:false, picture:'beau'},
+        6: {id: 6, name:'Chad', locked:true, picture:'chad'},
+        7: {id: 7, name:'Jim', locked:false, picture:'jim'},
+        8: {id: 8, name:'Jeremy', locked:true, picture:'jeremy'}
       },
       stations: {
         1: {name:'Dev1'},
