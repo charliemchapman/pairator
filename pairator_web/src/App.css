@@ -79,11 +79,6 @@
   display:flex;
 }
 
-.bench{
-  display:flex;
-  align-self: stretch;
-}
-
 .pair-list{
   width: 90%;
   display:flex;

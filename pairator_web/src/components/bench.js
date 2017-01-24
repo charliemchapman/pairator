@@ -27,7 +27,9 @@ class Bench extends Component {
     return connectDropTarget(
       <div className={`box ${highlight}`}>
         <div className='header'>Bench</div>
-        {userDivs}
+        <div className='usersBox'>
+          {userDivs}
+        </div>
       </div>);
   }
 }
