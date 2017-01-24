@@ -145,18 +145,16 @@ class PairList extends Component {
           benchUser={this.benchUser.bind(this)}/>);
 
     return (
-      <div className='main'>
-        <div className='gutter'/>
-        <div className='bench'>
-          {bench}
+      <div>
+        <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
+        <div className='main'>
+          <div className='gutter'/>
+          <div className='pair-list'>
+            {pairDivs}
+            {bench}
+          </div>
+          <div className='gutter'/>
         </div>
-        <div className='pair-list'>
-          {pairDivs}
-        </div>
-        <div className='box'>
-          <button className='pairate-button' onClick={pairate}>Pairate Humans</button>
-        </div>
-        <div className='gutter'/>
       </div>
     );
   }

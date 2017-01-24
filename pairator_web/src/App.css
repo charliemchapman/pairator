@@ -1,16 +1,24 @@
 .App {
-  text-align: center;
+  background-color: #EEE;
 }
 
 .App-logo {
+  font-size: 40px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.old{
   animation: App-logo-spin infinite 10s linear;
-  font-size: 5em;
 }
 
 .App-header {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
   background-color: #222;
-  height: 150px;
-  padding: 20px;
+  height: 50px;
+  padding: 5px;
   color: white;
 }
 
@@ -24,10 +32,11 @@
 }
 
 .box{
+  background-color: white;
   text-align: left;
-  margin: 10px 5px;
+  margin: 5px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #BBB;
   width: 250px;
 }
 
@@ -36,15 +45,34 @@
   background-color: #ddd
 }
 
+.box.highlight .usersBox::after{
+  content:'+';
+  color:white;
+  line-height: 55px;
+  font-size: 120px;
+  font-family: 'Material Icons';
+  text-align: center;
+  margin: 5px;
+  width: 110px;
+  height: 110px;
+  background-color: #EEE;
+  border-radius: 10%;
+}
+
 .box .header{
   text-align: center;
   font-weight: bold;
 }
 
 .pairate-button{
-  margin: 5px 0px;
-  padding: 20px;
-  width: 100%;
+  margin: 5px 0px 10px 55px;
+  padding: 10px;
+  text-align: left;
+  background-color: #058;
+  color: white;
+  font-weight: bold;
+  font-size: small;
+  border: none;
 }
 
 .main{
@@ -57,12 +85,15 @@
 }
 
 .pair-list{
-
+  width: 90%;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .gutter{
   display:flex;
-  flex-grow:1;
+  width: 50px;
 }
 
 .usersBox{
