@@ -76,6 +76,11 @@ body {
   margin: 5px 5px 10px 55px;
 }
 
+.clear-button{
+  float:right;
+  margin: 5px 55px 5px 5px
+}
+
 .main{
   display:flex;
 }
