@@ -1,4 +1,4 @@
-.App {
+body {
   background-color: #EEE;
 }
 
@@ -61,8 +61,8 @@
   font-weight: bold;
 }
 
-.pairate-button{
-  margin: 5px 0px 10px 55px;
+.blue-button{
+  margin: 0px 5px;
   padding: 10px;
   text-align: left;
   background-color: #058;
@@ -70,6 +70,10 @@
   font-weight: bold;
   font-size: small;
   border: none;
+}
+
+.pairate-button{
+  margin: 5px 5px 10px 55px;
 }
 
 .main{
@@ -102,6 +106,11 @@
   cursor: move;
 }
 
+.user.highlight{
+  border: 2px solid #d00;
+  border-radius: 5px;
+}
+
 .user .name{
   position: absolute;
   text-align: center;
@@ -118,6 +127,20 @@
   border-radius: 50%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.station-history{
+  position:absolute;
+  right:14px;
+  bottom:15px;
+  background-color: #1e3488;
+  color:white;
+  font-size:12px;
+  border-radius: 50%;
+  height: 17px;
+  width: 20px;
+  text-align: center;
+  padding-top: 3px
 }
 
 .lock-button{

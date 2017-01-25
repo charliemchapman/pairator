@@ -24,31 +24,60 @@ function collect(connect, monitor) {
 class PairList extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      users: {
-        1: {id: 1, name:'Charlie', locked:false, picture:'charlie'},
-        2: {id: 2, name:'Greg', locked:false, picture:'greg'},
-        3: {id: 3, name:'Ray', locked:false, picture:'ray'},
-        4: {id: 4, name:'Charles', locked:true, picture:'charles'},
-        5: {id: 5, name:'Beau', locked:false, picture:'beau'},
-        6: {id: 6, name:'Chad', locked:true, picture:'chad'},
-        7: {id: 7, name:'Jim', locked:false, picture:'jim'},
-        8: {id: 8, name:'Jeremy', locked:true, picture:'jeremy'}
-      },
-      stations: {
-        1: {name:'Dev1'},
-        2: {name:'Dev2'},
-        3: {name:'Dev3'},
-        4: {name:'Dev4'}
-      },
-      pairs: [
-        {id:1, stationId:1, users:[1,2]},
-        {id:2, stationId:2, users:[3,4]},
-        {id:3, stationId:3, users:[5,6]},
-        {id:4, stationId:4, users:[7]}
-      ],
-      benchUsers: [8]
+    const storedState = JSON.parse(localStorage.getItem('state'));
+
+    if (storedState){
+      this.state = storedState;
+    } else {
+      this.state = {
+        users: {
+          1: {id: 1, name:'Charlie', locked:false, picture:'charlie'},
+          2: {id: 2, name:'Greg', locked:false, picture:'greg'},
+          3: {id: 3, name:'Ray', locked:false, picture:'ray'},
+          4: {id: 4, name:'Charles', locked:true, picture:'charles'},
+          5: {id: 5, name:'Beau', locked:false, picture:'beau'},
+          6: {id: 6, name:'Chad', locked:true, picture:'chad'},
+          7: {id: 7, name:'Jim', locked:false, picture:'jim'},
+          8: {id: 8, name:'Jeremy', locked:true, picture:'jeremy'}
+        },
+        stations: {
+          1: {name:'Dev1'},
+          2: {name:'Dev2'},
+          3: {name:'Dev3'},
+          4: {name:'Dev4'}
+        },
+        pairs: [
+          {id:1, stationId:1, users:[1,2]},
+          {id:2, stationId:2, users:[3,4]},
+          {id:3, stationId:3, users:[5,6]},
+          {id:4, stationId:4, users:[7]}
+        ],
+        pairHistory:[],
+        benchUsers: [8]
+      }
     }
+  }
+
+  saveToLocalStorage(state){
+    const oldState = JSON.parse(localStorage.getItem('state'));
+    if (oldState){
+      state.pairHistory.push(
+        {
+          id: state.pairHistory.length,
+          timeStamp:Date.now(),
+          pairs:oldState.pairs
+        }
+      )
+    }
+
+    localStorage.setItem('state', JSON.stringify(state));
+    this.setState(state);
+  }
+
+  clearPairHistory(state){
+    state.pairHistory = [];
+    this.setState(state);
+    localStorage.setItem('state', JSON.stringify(state));
   }
 
   shuffle(o) {
@@ -126,6 +155,8 @@ class PairList extends Component {
   render() {
     const pairate = ()=>this.pairate();
     const toggleLock = userId=>this.toggleUserLock(userId);
+    const saveState = ()=>this.saveToLocalStorage(this.state);
+    const clearPairHistory = ()=>this.clearPairHistory(this.state);
 
     const sortedPairs = this.state.pairs.sort((a,b)=>a.id-b.id);
 
@@ -136,6 +167,7 @@ class PairList extends Component {
         stations={this.state.stations}
         toggleLock={toggleLock}
         moveUser={this.moveUser.bind(this)}
+        pairHistory={this.state.pairHistory}
         key={index}/>);
     })
 
@@ -146,7 +178,9 @@ class PairList extends Component {
 
     return (
       <div>
-        <button className='pairate-button' onClick={pairate}>Suggest a Switch!</button>
+        <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
+        <button className='save-button blue-button' onClick={saveState}>Lock in</button>
+        <button className='clear-button blue-button' onClick={clearPairHistory}>Clear History</button>
         <div className='main'>
           <div className='gutter'/>
           <div className='pair-list'>
