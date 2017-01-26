@@ -55,6 +55,7 @@ class PairList extends Component {
 
     if (storedState){
       this.state = {
+        ...defaultState,
         ...storedState,
         stations: defaultState.stations
       };
@@ -80,6 +81,15 @@ class PairList extends Component {
     state.pairHistory = [];
     this.setState(state);
     localStorage.setItem('state', JSON.stringify(state));
+  }
+
+  resetFromHistory(state){
+    const lastHistory = [...state.pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
+    const newState = {
+      ...state,
+      pairs: lastHistory.pairs
+    }
+    this.setState(newState);
   }
 
   shuffle(o) {
@@ -155,7 +165,7 @@ class PairList extends Component {
   }
 
   isDirty(){
-    if (this.state.pairHistory.length < 1) return true;
+    if (this.state.pairHistory && this.state.pairHistory.length < 1) return true;
 
     const lastHistory = [...this.state.pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
 
@@ -167,6 +177,7 @@ class PairList extends Component {
     const toggleLock = userId=>this.toggleUserLock(userId);
     const saveState = ()=>this.saveToLocalStorage(this.state);
     const clearPairHistory = ()=>this.clearPairHistory(this.state);
+    const resetFromHistory = ()=>this.resetFromHistory(this.state);
 
     const sortedPairs = this.state.pairs.sort((a,b)=>a.id-b.id);
     const dirty = this.isDirty();
@@ -191,6 +202,7 @@ class PairList extends Component {
       <div>
         <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
         <button className='save-button blue-button' onClick={saveState} disabled={!dirty}>Lock in</button>
+        <button className='reset-button blue-button' onClick={resetFromHistory} disabled={!dirty}>Reset</button>
         <button className='clear-button blue-button' onClick={clearPairHistory}>Clear History</button>
         <div className='main'>
           <div className='gutter'/>
