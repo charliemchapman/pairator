@@ -21,12 +21,12 @@ class Pair extends Component {
     pairHistory.sort((a,b)=>{return b.id-a.id;});
     let count = 0;
     const stationHistory = pairHistory.map(p=>{
-      return p.pairs.filter(x=>x.stationId == stationId)[0];
+      return p.pairs.filter(x=>x.stationId === stationId)[0];
     });
 
     let done = false;
     for(let i = 0; i < stationHistory.length && !done; i++){
-      if (stationHistory[i].users.filter(u=>u==user).length){
+      if (stationHistory[i].users.filter(u=>u===user).length){
         count++;
       } else {
         done = true;

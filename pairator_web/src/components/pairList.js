@@ -9,18 +9,18 @@ export const ItemTypes = {
   USER: 'user'
 };
 
-const userSource = {
-  beginDrag(props) {
-    return {};
-  }
-};
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
-  }
-}
+// const userSource = {
+//   beginDrag(props) {
+//     return {};
+//   }
+// };
+//
+// function collect(connect, monitor) {
+//   return {
+//     connectDragSource: connect.dragSource(),
+//     isDragging: monitor.isDragging()
+//   }
+// }
 
 class PairList extends Component {
   constructor(props){
@@ -82,7 +82,7 @@ class PairList extends Component {
   }
 
   shuffle(o) {
-    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i, 10), x = o[--i], o[i] = o[j], o[j] = x);
 	  return o;
   }
 
@@ -102,7 +102,7 @@ class PairList extends Component {
     addToPair.users = [...addToPair.users, userId];
 
     //unlock user
-    this.state.users[userId].locked = false;
+    newState.users[userId].locked = false;
 
     this.setState(newState);
   }
@@ -114,11 +114,11 @@ class PairList extends Component {
   }
 
   removeUserFromAllLists(userId, newState){
-    const removeFromPair = newState.pairs.find(p=>p.users.find(x=>x==userId));
+    const removeFromPair = newState.pairs.find(p=>p.users.find(x=>x===userId));
     if (removeFromPair){
-      removeFromPair.users = removeFromPair.users.filter(x=>x != userId);
+      removeFromPair.users = removeFromPair.users.filter(x=>x !== userId);
     } else {
-      newState.benchUsers = newState.benchUsers.filter(x=>x != userId)
+      newState.benchUsers = newState.benchUsers.filter(x=>x !== userId)
     }
   }
 

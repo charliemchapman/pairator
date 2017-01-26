@@ -28,7 +28,7 @@ class User extends Component {
 
     return connectDragSource(
       <div className={`user ${hidden} ${highlight}`}>
-        <div className={`picture`}><img src={UserImages[user.picture]} height='100%' /></div>
+        <div className={`picture`}><img src={UserImages[user.picture]} height='100%' alt='' /></div>
         <div className='station-history'>{historyOnStation}</div>
         {lockButton}
         <div className='name' style={{cursor:'move'}}>{user.name}</div>
