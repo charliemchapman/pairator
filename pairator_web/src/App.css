@@ -72,6 +72,10 @@ body {
   border: none;
 }
 
+.blue-button:disabled{
+  background-color:#BBB
+}
+
 .pairate-button{
   margin: 5px 5px 10px 55px;
 }

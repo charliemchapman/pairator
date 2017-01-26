@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DragDropContext } from 'react-dnd';
+import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
@@ -152,6 +153,13 @@ class PairList extends Component {
     this.setState(newState);
   }
 
+  isDirty(){
+    if (this.state.pairHistory.length < 1) return true;
+
+    const lastHistory = [...this.state.pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
+    return !deepEqual(this.state.pairs, lastHistory.pairs);
+  }
+
   render() {
     const pairate = ()=>this.pairate();
     const toggleLock = userId=>this.toggleUserLock(userId);
@@ -159,6 +167,7 @@ class PairList extends Component {
     const clearPairHistory = ()=>this.clearPairHistory(this.state);
 
     const sortedPairs = this.state.pairs.sort((a,b)=>a.id-b.id);
+    const dirty = this.isDirty();
 
     const pairDivs = sortedPairs.map((p,index)=>{
       return (<Pair
@@ -179,7 +188,7 @@ class PairList extends Component {
     return (
       <div>
         <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
-        <button className='save-button blue-button' onClick={saveState}>Lock in</button>
+        <button className='save-button blue-button' onClick={saveState} disabled={!dirty}>Lock in</button>
         <button className='clear-button blue-button' onClick={clearPairHistory}>Clear History</button>
         <div className='main'>
           <div className='gutter'/>
