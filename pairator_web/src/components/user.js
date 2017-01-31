@@ -24,7 +24,7 @@ class User extends Component {
     const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
     const lockIcon = (<i className={`material-icons ${locked}`}>{locked}</i>)
     const lockButton = showLock ? (<button className='lock-button' onClick={()=>this.props.toggleLock(user.id)}>{lockIcon}</button>) : '';
-    const highlight = historyOnStation > 0 ? 'highlight' : '';
+    const highlight = historyOnStation > 1 ? 'highlight' : '';
 
     return connectDragSource(
       <div className={`user ${hidden} ${highlight}`}>
