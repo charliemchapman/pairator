@@ -4,91 +4,79 @@ import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
+import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
 
 export const ItemTypes = {
   USER: 'user'
 };
 
-// const userSource = {
-//   beginDrag(props) {
-//     return {};
-//   }
-// };
-//
-// function collect(connect, monitor) {
-//   return {
-//     connectDragSource: connect.dragSource(),
-//     isDragging: monitor.isDragging()
-//   }
-// }
-
 class PairList extends Component {
   constructor(props){
     super(props);
-    const storedState = JSON.parse(localStorage.getItem('state'));
-    const defaultState = {
-      users: {
-        1: {id: 1, name:'Charlie', locked:false, picture:'charlie'},
-        2: {id: 2, name:'Greg', locked:false, picture:'greg'},
-        3: {id: 3, name:'Ray', locked:false, picture:'ray'},
-        4: {id: 4, name:'Charles', locked:true, picture:'charles'},
-        5: {id: 5, name:'Beau', locked:false, picture:'beau'},
-        6: {id: 6, name:'Chad', locked:true, picture:'chad'},
-        7: {id: 7, name:'Jim', locked:false, picture:'jim'},
-        8: {id: 8, name:'Jeremy', locked:true, picture:'jeremy'}
-      },
-      stations: {
-        1: {name:'bw-leviathan-d1'},
-        2: {name:'bw-leviathan-d2'},
-        3: {name:'bw-leviathan-d3'},
-        4: {name:'bw-leviathan-d5'}
-      },
-      pairs: [
-        {id:1, stationId:1, users:[1,2]},
-        {id:2, stationId:2, users:[3,4]},
-        {id:3, stationId:3, users:[5,6]},
-        {id:4, stationId:4, users:[7]}
-      ],
-      pairHistory:[],
-      benchUsers: [8]
-    }
 
-    if (storedState){
-      this.state = {
-        ...defaultState,
-        ...storedState,
-        stations: defaultState.stations
-      };
-    } else {
-      this.state = defaultState;
+    this.state = {
+      users: {},
+      stations: {},
+      pairs:[],
+      benchUsers: [],
+      team: {
+        pairs: []
+      }
     }
   }
 
-  saveToLocalStorage(state){
-    state.pairHistory.push(
+  componentWillMount(){
+    this.fetchTeam();
+  }
+
+  fetchTeam(){
+    getTeam().then((response)=>{
+      const users = {};
+       response.Item.userIds.forEach((userId, i)=>{
+        users[userId] = {id: userId}
+      });
+
+      const stations = {};
+      response.Item.stationIds.forEach((stationId, i)=>{
+        stations[stationId] = {id:stationId}
+      });
+
+      this.setState({
+        ...this.state,
+        users: users,
+        stations: stations,
+        team: response.Item
+      });
+
+      Object.keys(users).forEach(userId=>{
+        getUser(userId).then(userResponse=>{
+          const newState = {...this.state, users: {...this.state.users}};
+          newState.users[userId] = userResponse.Item;
+          this.setState(newState);
+        })
+      })
+
+      Object.keys(stations).forEach(stationId=>{
+        getStation(stationId).then(stationResponse=>{
+          const newState = {...this.state, stations: {...this.state.stations}};
+          newState.stations[stationId] = stationResponse.Item;
+          this.setState(newState);
+        })
+      })
+    })
+  }
+
+  lockInPairs(state){
+    const currentHistory = state.team.pairHistory || [];
+    const newState = {...state, team: {...state.team, pairHistory:[...currentHistory]}}
+    newState.team.pairHistory.push(
       {
-        id: state.pairHistory.length,
+        id: newState.team.pairHistory.length,
         timeStamp:Date.now(),
-        pairs:state.pairs
+        pairs:newState.team.pairs
       }
     )
-
-    localStorage.setItem('state', JSON.stringify(state));
-    this.setState(state);
-  }
-
-  clearPairHistory(state){
-    state.pairHistory = [];
-    this.setState(state);
-    localStorage.setItem('state', JSON.stringify(state));
-  }
-
-  resetFromHistory(state){
-    const lastHistory = [...state.pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
-    const newState = {
-      ...state,
-      pairs: lastHistory.pairs
-    }
+    putTeam(newState.team);
     this.setState(newState);
   }
 
@@ -104,12 +92,12 @@ class PairList extends Component {
   }
 
   moveUser(userId, stationId){
-    const newPairs = this.state.pairs.map(x=>{return {...x}})
-    const newState = {...this.state, pairs: newPairs};
+    const newPairs = this.state.team.pairs.map(x=>{return {...x}})
+    const newState = {...this.state, team: {...this.state.team, pairs: newPairs}};
 
     this.removeUserFromAllLists(userId, newState);
 
-    const addToPair = newState.pairs.find(p=>p.stationId===stationId);
+    const addToPair = newState.team.pairs.find(p=>p.stationId===stationId);
     addToPair.users = [...addToPair.users, userId];
 
     //unlock user
@@ -119,26 +107,27 @@ class PairList extends Component {
   }
 
   benchUser(userId){
-    const newState = {...this.state, benchUsers: [...this.state.benchUsers, userId]};
+    console.log(this.state);
+    const newState = {...this.state, team: { ...this.state.team, benchUserIds: [...this.state.team.benchUserIds, userId]} };
     this.removeUserFromAllLists(userId, newState)
     this.setState(newState);
   }
 
   removeUserFromAllLists(userId, newState){
-    const removeFromPair = newState.pairs.find(p=>p.users.find(x=>x===userId));
+    const removeFromPair = newState.team.pairs.find(p=>p.users.find(x=>x===userId));
     if (removeFromPair){
       removeFromPair.users = removeFromPair.users.filter(x=>x !== userId);
     } else {
-      newState.benchUsers = newState.benchUsers.filter(x=>x !== userId)
+      newState.team.benchUserIds = newState.team.benchUserIds.filter(x=>x !== userId)
     }
   }
-
+  
   pairate(){
     let newPairs = [];
     let movingUsers = [];
-    let shuffledPairs = this.shuffle([...this.state.pairs])
+    let shuffledPairs = this.shuffle([...this.state.team.pairs])
     shuffledPairs.forEach(oldPair=>{
-      let newPair = {id:oldPair.id, stationId:oldPair.stationId, users:[]}
+      let newPair = {stationId:oldPair.stationId, users:[]}
       oldPair.users.forEach(user=>{
         if (this.state.users[user].locked){
           newPair.users.push(user);
@@ -147,7 +136,6 @@ class PairList extends Component {
           movingUsers.push(user);
         }
       })
-
       newPairs.push(newPair);
     })
 
@@ -160,50 +148,60 @@ class PairList extends Component {
       }
     })
 
-    const newState = {users: this.state.users, stations:this.state.stations, pairs:newPairs};
+    const newState = {...this.state, team:{ ...this.state.team, pairs:newPairs} };
     this.setState(newState);
   }
 
   isDirty(){
-    if (this.state.pairHistory && this.state.pairHistory.length < 1) return true;
+    const team = this.state.team || {};
+    const { pairs=[], pairHistory=[]} = team;
+    if (pairHistory.length < 1) return true;
 
-    const lastHistory = [...this.state.pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
+    const lastHistory = [...pairHistory].sort((a,b)=>{return b.id-a.id;})[0];
 
-    return !deepEqual(this.state.pairs, lastHistory.pairs);
+    return !deepEqual(pairs, lastHistory.pairs);
+  }
+
+  sortPairs(pairs, stations){
+    return pairs.sort((a,b)=>{
+      if (!stations[a.stationId] || !stations[b.stationId]){return 0;}
+      return stations[a.stationId].order-stations[b.stationId].order
+    });
   }
 
   render() {
+    const {team = {}, users = {}, stations = {}} = this.state;
+    const {pairs=[], benchUserIds=[], pairHistory=[]} = team;
+
     const pairate = ()=>this.pairate();
     const toggleLock = userId=>this.toggleUserLock(userId);
-    const saveState = ()=>this.saveToLocalStorage(this.state);
-    const clearPairHistory = ()=>this.clearPairHistory(this.state);
-    const resetFromHistory = ()=>this.resetFromHistory(this.state);
+    const lockInPairs = ()=> this.lockInPairs(this.state);
+    const resetFromApi = ()=> this.fetchTeam();
 
-    const sortedPairs = this.state.pairs.sort((a,b)=>a.id-b.id);
+    const sortedPairs = this.sortPairs(pairs, stations);
     const dirty = this.isDirty();
 
     const pairDivs = sortedPairs.map((p,index)=>{
       return (<Pair
         pair={p}
-        users={this.state.users}
-        stations={this.state.stations}
+        users={users}
+        stations={stations}
         toggleLock={toggleLock}
         moveUser={this.moveUser.bind(this)}
-        pairHistory={this.state.pairHistory}
+        pairHistory={pairHistory}
         key={index}/>);
     })
 
     const bench = (<Bench
-          benchUsers={this.state.benchUsers}
-          users={this.state.users}
+          benchUsers={benchUserIds}
+          users={users}
           benchUser={this.benchUser.bind(this)}/>);
 
     return (
       <div>
         <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
-        <button className='save-button blue-button' onClick={saveState} disabled={!dirty}>Lock in</button>
-        <button className='reset-button blue-button' onClick={resetFromHistory} disabled={!dirty}>Reset</button>
-        <button className='clear-button blue-button' onClick={clearPairHistory}>Clear History</button>
+        <button className='save-button blue-button' onClick={lockInPairs} disabled={!dirty}>Lock in</button>
+        <button className='reset-button blue-button' onClick={resetFromApi} disabled={!dirty}>Reset</button>
         <div className='main'>
           <div className='gutter'/>
           <div className='pair-list'>

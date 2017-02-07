@@ -2,6 +2,36 @@ body {
   background-color: #EEE;
 }
 
+@keyframes pear-logo-wiggle-back {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(7deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pear-logo-wiggle-front {
+  0% { transform: rotate(7deg); }
+  50% { transform: rotate(0deg); }
+  100% { transform: rotate(7deg); }
+}
+
+.pear-logo{
+  height: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+  transform-origin: 50% 80%;
+}
+
+.pear-logo.back{
+  display: block;
+  animation: pear-logo-wiggle-back infinite 1s ease-in-out;
+}
+
+.pear-logo.front{
+  position: absolute;
+  left: 23px;
+  animation: pear-logo-wiggle-front infinite 1s ease-in-out;
+}
+
 .App-logo {
   font-size: 40px;
   margin-left: 5px;
@@ -17,6 +47,10 @@ body {
   height: 50px;
   padding: 5px;
   color: white;
+}
+
+.App-header h2{
+  margin-left: 20px
 }
 
 .App-intro {

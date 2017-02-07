@@ -5,7 +5,7 @@ import { UserImages } from '../resources';
 
 const userSource = {
   beginDrag(props) {
-    return {userId:props.user.id};
+    return {userId:props.user.userId};
   }
 };
 
@@ -18,7 +18,7 @@ function collect(connect, monitor) {
 
 class User extends Component {
   render() {
-    const { user, historyOnStation, connectDragSource, isDragging, showLock=true } = this.props;
+    const { user = {}, historyOnStation, connectDragSource, isDragging, showLock=true } = this.props;
     const hidden = isDragging ? 'hidden' : '';
 
     const locked = user.locked && showLock ? 'lock_outline' : 'lock_open';
@@ -26,9 +26,11 @@ class User extends Component {
     const lockButton = showLock ? (<button className='lock-button' onClick={()=>this.props.toggleLock(user.id)}>{lockIcon}</button>) : '';
     const highlight = historyOnStation > 1 ? 'highlight' : '';
 
+    const picture = user.name ? user.name.toLowerCase() : undefined;
+
     return connectDragSource(
       <div className={`user ${hidden} ${highlight}`}>
-        <div className={`picture`}><img src={UserImages[user.picture]} height='100%' alt='' /></div>
+        <div className={`picture`}><img src={UserImages[picture]} height='100%' alt='' /></div>
         <div className='station-history'>{historyOnStation}</div>
         {lockButton}
         <div className='name' style={{cursor:'move'}}>{user.name}</div>
