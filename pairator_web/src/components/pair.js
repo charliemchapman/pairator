@@ -52,6 +52,7 @@ class Pair extends Component {
     return connectDropTarget(
       <div className={`box ${highlight}`}>
         <div className='header'>{stations[pair.stationId].name}</div>
+        <div className='subheader'>{stations[pair.stationId].description}</div>
         <div className='usersBox'>
           {userDivs}
         </div>
