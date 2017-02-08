@@ -1,7 +1,16 @@
-const TEAM_ID = '3f852669-e25c-4e48-8c57-f9caa73a8f6f';
 
-export function getTeam(){
-  return fetch(`https://wzpocd33b6.execute-api.us-west-2.amazonaws.com/dev/teams/${TEAM_ID}`)
+export function getTeams(){
+  return fetch(`https://wzpocd33b6.execute-api.us-west-2.amazonaws.com/dev/teams`)
+    .then(function(response) {
+        if (response.status >= 400) {
+            throw new Error("Bad response from server");
+        }
+        return response.json();
+    });
+}
+
+export function getTeam(teamId){
+  return fetch(`https://wzpocd33b6.execute-api.us-west-2.amazonaws.com/dev/teams/${teamId}`)
     .then(function(response) {
         if (response.status >= 400) {
             throw new Error("Bad response from server");
@@ -17,7 +26,7 @@ export function putTeam(team){
     body: JSON.stringify(team)
   };
 
-  return fetch(`https://wzpocd33b6.execute-api.us-west-2.amazonaws.com/dev/teams/${TEAM_ID}`, options)
+  return fetch(`https://wzpocd33b6.execute-api.us-west-2.amazonaws.com/dev/teams/${team.teamId}`, options)
     .then(function(response) {
         if (response.status >= 400) {
             throw new Error("Bad response from server");

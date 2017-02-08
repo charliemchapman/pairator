@@ -30,7 +30,7 @@ class PairList extends Component {
   }
 
   fetchTeam(){
-    getTeam().then((response)=>{
+    getTeam(this.props.params.teamId).then((response)=>{
       const users = {};
        response.Item.userIds.forEach((userId, i)=>{
         users[userId] = {id: userId}
@@ -121,7 +121,7 @@ class PairList extends Component {
       newState.team.benchUserIds = newState.team.benchUserIds.filter(x=>x !== userId)
     }
   }
-  
+
   pairate(){
     let newPairs = [];
     let movingUsers = [];
