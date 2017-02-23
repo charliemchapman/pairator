@@ -12,7 +12,7 @@ require('isomorphic-fetch');
 ReactDOM.render(
 
   <Router history={browserHistory}>
-    <Redirect from="/" to="/teams"/>
+    <Redirect from="/pairator/" to="/teams"/>
     <Route path="/" component={App}>
       <Redirect from="" to="teams"/>
       <Route path="teams" component={TeamList}/>
