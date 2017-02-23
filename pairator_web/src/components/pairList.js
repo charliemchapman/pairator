@@ -52,6 +52,20 @@ class PairList extends Component {
         getUser(userId).then(userResponse=>{
           const newState = {...this.state, users: {...this.state.users}};
           newState.users[userId] = userResponse.Item;
+
+          if (!newState.users[userId].active){
+            newState.team = {...this.state.team, pairs: [...this.state.team.pairs]}
+            newState.team.pairs.forEach(pair=>{
+              const newUsers = [];
+              pair.users.forEach(oldUserId=>{
+                if (oldUserId !== userId){
+                  newUsers.push(oldUserId);
+                }
+              });
+              pair.users = newUsers;
+            });
+          }
+
           this.setState(newState);
         })
       })
