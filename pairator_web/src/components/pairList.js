@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
+import { setTeam } from '../actions/index';
 import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
 
 export const ItemTypes = {
@@ -47,6 +49,8 @@ class PairList extends Component {
         stations: stations,
         team: response.Item
       });
+
+      this.props.setTeam(response.Item);
 
       Object.keys(users).forEach(userId=>{
         getUser(userId).then(userResponse=>{
@@ -121,7 +125,6 @@ class PairList extends Component {
   }
 
   benchUser(userId){
-    console.log(this.state);
     const newState = {...this.state, team: { ...this.state.team, benchUserIds: [...this.state.team.benchUserIds, userId]} };
     this.removeUserFromAllLists(userId, newState)
     this.setState(newState);
@@ -229,4 +232,18 @@ class PairList extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(PairList);
+const mapStateToProps = (state, ownProps)=>{
+  return { team: state.team }
+}
+
+const mapDispatchToProps = (dispatch, ownProps)=>{
+  return {
+    setTeam: (team)=>dispatch(setTeam(team))
+  }
+}
+
+const connectedPairList = connect(
+  mapStateToProps, mapDispatchToProps
+)(PairList);
+
+export default DragDropContext(HTML5Backend)(connectedPairList);
