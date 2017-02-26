@@ -5,7 +5,7 @@ import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
-import { setTeam } from '../actions/index';
+import { setTeam, addStation, addUser, toggleLock, setLock } from '../actions/index';
 import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
 
 export const ItemTypes = {
@@ -45,7 +45,7 @@ class PairList extends Component {
 
       this.setState({
         ...this.state,
-        users: users,
+        users: {},
         stations: stations,
         team: response.Item
       });
@@ -54,31 +54,13 @@ class PairList extends Component {
 
       Object.keys(users).forEach(userId=>{
         getUser(userId).then(userResponse=>{
-          const newState = {...this.state, users: {...this.state.users}};
-          newState.users[userId] = userResponse.Item;
-
-          if (!newState.users[userId].active){
-            newState.team = {...this.state.team, pairs: [...this.state.team.pairs]}
-            newState.team.pairs.forEach(pair=>{
-              const newUsers = [];
-              pair.users.forEach(oldUserId=>{
-                if (oldUserId !== userId){
-                  newUsers.push(oldUserId);
-                }
-              });
-              pair.users = newUsers;
-            });
-          }
-
-          this.setState(newState);
+          this.props.addUser(userResponse.Item)
         })
       })
 
       Object.keys(stations).forEach(stationId=>{
         getStation(stationId).then(stationResponse=>{
-          const newState = {...this.state, stations: {...this.state.stations}};
-          newState.stations[stationId] = stationResponse.Item;
-          this.setState(newState);
+          this.props.addStation(stationResponse.Item);
         })
       })
     })
@@ -104,9 +86,7 @@ class PairList extends Component {
   }
 
   toggleUserLock(userId){
-    const newState = {...this.state, users: {...this.state.users}}
-    newState.users[userId] = {...this.state.users[userId], locked:!this.state.users[userId].locked};
-    this.setState(newState)
+    this.props.toggleLock(userId);
   }
 
   moveUser(userId, stationId){
@@ -119,7 +99,7 @@ class PairList extends Component {
     addToPair.users = [...addToPair.users, userId];
 
     //unlock user
-    newState.users[userId].locked = false;
+    this.props.setLock(userId, false);
 
     this.setState(newState);
   }
@@ -146,7 +126,7 @@ class PairList extends Component {
     shuffledPairs.forEach(oldPair=>{
       let newPair = {stationId:oldPair.stationId, users:[]}
       oldPair.users.forEach(user=>{
-        if (this.state.users[user].locked){
+        if (this.props.users[user].locked){
           newPair.users.push(user);
         }
         else{
@@ -187,7 +167,8 @@ class PairList extends Component {
   }
 
   render() {
-    const {team = {}, users = {}, stations = {}} = this.state;
+    const { team = {} } = this.state;
+    const { users = {}, stations = {} } = this.props;
     const {pairs=[], benchUserIds=[], pairHistory=[]} = team;
 
     const pairate = ()=>this.pairate();
@@ -233,12 +214,16 @@ class PairList extends Component {
 }
 
 const mapStateToProps = (state, ownProps)=>{
-  return { team: state.team }
+  return { team: state.team, stations: state.stations, users: state.users }
 }
 
 const mapDispatchToProps = (dispatch, ownProps)=>{
   return {
-    setTeam: (team)=>dispatch(setTeam(team))
+    setTeam: (team)=>dispatch(setTeam(team)),
+    addStation: (station)=>dispatch(addStation(station)),
+    addUser: (user)=>dispatch(addUser(user)),
+    toggleLock: (userId)=>dispatch(toggleLock(userId)),
+    setLock: (userId, lock)=>dispatch(setLock(userId, lock))
   }
 }
 

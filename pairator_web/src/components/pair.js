@@ -49,10 +49,15 @@ class Pair extends Component {
         historyOnStation={this.timeOnStation(u, pair.stationId, pairHistory)}
         key={i}/>)
     });
+
+    const station = stations[pair.stationId];
+    const header = station ? station.name : 'loading...';
+    const description = station ? station.description : '';
+
     return connectDropTarget(
       <div className={`box ${highlight}`}>
-        <div className='header'>{stations[pair.stationId].name}</div>
-        <div className='subheader'>{stations[pair.stationId].description}</div>
+        <div className='header'>{header}</div>
+        <div className='subheader'>{description}</div>
         <div className='usersBox'>
           {userDivs}
         </div>
