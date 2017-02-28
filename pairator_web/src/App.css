@@ -227,3 +227,16 @@ body {
 .hidden{
   display:none;
 }
+
+
+.graph{
+  display:flex;
+}
+
+.userPieChart{
+  width:200px;
+}
+
+.userPieChart h2{
+  text-align: center;
+}
