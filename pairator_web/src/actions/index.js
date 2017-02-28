@@ -19,6 +19,13 @@ export function addUser(user){
   };
 }
 
+export function addActiveUser(user){
+  return {
+    type: 'ADD_ACTIVE_USER',
+    user: user
+  };
+}
+
 export function toggleLock(userId){
   return {
     type: 'TOGGLE_LOCK_USER',

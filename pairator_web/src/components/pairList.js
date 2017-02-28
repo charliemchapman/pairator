@@ -5,7 +5,7 @@ import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
-import { setTeam, addStation, addUser, toggleLock, setLock } from '../actions/index';
+import { setTeam, addStation, addActiveUser, toggleLock, setLock } from '../actions/index';
 import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
 
 export const ItemTypes = {
@@ -196,7 +196,7 @@ const mapDispatchToProps = (dispatch, ownProps)=>{
   return {
     setTeam: (team)=>dispatch(setTeam(team)),
     addStation: (station)=>dispatch(addStation(station)),
-    addUser: (user)=>dispatch(addUser(user)),
+    addUser: (user)=>dispatch(addActiveUser(user)),
     toggleLock: (userId)=>dispatch(toggleLock(userId)),
     setLock: (userId, lock)=>dispatch(setLock(userId, lock))
   }

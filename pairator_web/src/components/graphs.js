@@ -39,6 +39,10 @@ class Graphs extends Component {
   }
 
   getChart(userId, users, pairHistory, index){
+    if (!users[userId]){
+      return null;
+    }
+
     const mainUserName = users[userId] ? users[userId].name : '';
     const columns = { alone: 0 };
     Object.keys(users).forEach(u=>{
@@ -63,6 +67,10 @@ class Graphs extends Component {
         }
       })
     })
+
+    if (Object.keys(columns).filter(x=>x==='') > 0){
+      return null;
+    }
 
     const chartData = {
       columns: [],
