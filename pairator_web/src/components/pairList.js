@@ -7,6 +7,8 @@ import Pair from './pair';
 import Bench from './bench';
 import { setTeam, addStation, addUser, toggleLock, setLock } from '../actions/index';
 import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
+import C3Chart from 'react-c3js';
+import 'c3/c3.css';
 
 export const ItemTypes = {
   USER: 'user'
@@ -142,6 +144,49 @@ class PairList extends Component {
     });
   }
 
+  getChart(userId, users, pairHistory){
+    const mainUserName = users[userId] ? users[userId].name : '';
+    const columns = { alone: 0 };
+    Object.keys(users).forEach(u=>{
+      if (users[u].name){
+        columns[users[u].name] = 0
+      }
+    });
+
+    pairHistory.forEach(history=>{
+      history.pairs.forEach(pair=>{
+        if (pair.users.includes(userId)){
+          pair.users.forEach(user=>{
+            const userName = users[user].name;
+            if (userName && user != userId){
+            if (!columns[userName]) {columns[userName] = 0}
+              columns[userName] += 1;
+            }
+          })
+          if (pair.users.length === 1){
+            columns.alone += 1;
+          }
+        }
+      })
+    })
+
+    const chartData = {
+      columns: [],
+      type: 'pie',
+      color: {
+        pattern: ['#d62728', '#2ca02c', '#9467bd', '#1f77b4', '#8c564b', '#ff7f0e']
+      }
+    }
+    Object.keys(columns).forEach(c=>chartData.columns.push([c, columns[c]]));
+
+    return (
+      <div className="userPieChart">
+        <h2>{mainUserName}</h2>
+        <C3Chart data={chartData} />
+      </div>
+    );
+  }
+
   render() {
 
     const { team = {}, users = {}, stations = {} } = this.props;
@@ -170,8 +215,15 @@ class PairList extends Component {
           users={users}
           benchUser={this.benchUser.bind(this)}/>);
 
+    const charts = Object.keys(users).filter(x=>x!='027be6f0-7eeb-4a95-9e1c-c57afa259857').map(user=>{
+      return this.getChart(user, users, pairHistory);
+    })
+
     return (
       <div>
+        <div className='graph'>
+          {charts}
+        </div>
         <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
         <button className='save-button blue-button' onClick={lockInPairs} disabled={!dirty}>Lock in</button>
         <button className='reset-button blue-button' onClick={resetFromApi} disabled={!dirty}>Reset</button>
