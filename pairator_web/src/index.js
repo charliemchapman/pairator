@@ -8,6 +8,7 @@ import { Router, Redirect, Route, browserHistory } from 'react-router';
 import reducers from './reducers/index';
 import TeamList from './components/teamList';
 import PairList from './components/pairList';
+import Graphs from './components/graphs';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Redirect from="" to="teams"/>
         <Route path="teams" component={TeamList}/>
         <Route path="teams/:teamId" component={PairList}/>
+        <Route path="teams/:teamId/graphs" component={Graphs}/>
       </Route>
     </Router>
   </Provider>,
