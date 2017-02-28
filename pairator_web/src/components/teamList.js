@@ -17,7 +17,7 @@ export default class TeamList extends Component {
   render() {
     const teamDivs = this.state.teams.map((team, i)=>{
       return (
-        <Link to={`/teams/${team.teamId}`} key={i}>
+        <Link to={`/pairator/teams/${team.teamId}`} key={i}>
           <div className="box">
             <div className="header">{team.name}</div>
           </div>

@@ -176,7 +176,7 @@ class PairList extends Component {
         <button className='pairate-button blue-button' onClick={pairate}>Suggest a Switch!</button>
         <button className='save-button blue-button' onClick={lockInPairs} disabled={!dirty}>Lock in</button>
         <button className='reset-button blue-button' onClick={resetFromApi} disabled={!dirty}>Reset</button>
-        <Link to={`/teams/${team.teamId}/graphs`}>Graphs</Link>
+        <Link to={`/pairator/teams/${team.teamId}/graphs`}>Graphs</Link>
         <div className='main'>
           <div className='gutter'/>
           <div className='pair-list'>

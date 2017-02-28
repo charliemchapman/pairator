@@ -231,6 +231,7 @@ body {
 
 .graph{
   display:flex;
+  flex-wrap: wrap;
 }
 
 .userPieChart{

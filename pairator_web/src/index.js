@@ -22,8 +22,9 @@ let store = createStore(
 ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Redirect from="/pairator/" to="/teams"/>
-      <Route path="/" component={App}>
+      <Redirect from="/" to="/pairator/teams"/>
+      <Redirect from="pairator" to="pairator/teams"/>
+      <Route path="pairator" component={App}>
         <Redirect from="" to="teams"/>
         <Route path="teams" component={TeamList}/>
         <Route path="teams/:teamId" component={PairList}/>
