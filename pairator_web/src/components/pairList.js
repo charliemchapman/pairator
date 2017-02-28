@@ -13,20 +13,6 @@ export const ItemTypes = {
 };
 
 class PairList extends Component {
-  constructor(props){
-    super(props);
-
-    this.state = {
-      users: {},
-      stations: {},
-      pairs:[],
-      benchUsers: [],
-      team: {
-        pairs: []
-      }
-    }
-  }
-
   componentWillMount(){
     this.fetchTeam();
   }
@@ -41,13 +27,6 @@ class PairList extends Component {
       const stations = {};
       response.Item.stationIds.forEach((stationId, i)=>{
         stations[stationId] = {id:stationId}
-      });
-
-      this.setState({
-        ...this.state,
-        users: {},
-        stations: stations,
-        team: response.Item
       });
 
       this.props.setTeam(response.Item);
@@ -67,17 +46,17 @@ class PairList extends Component {
   }
 
   lockInPairs(state){
-    const currentHistory = state.team.pairHistory || [];
-    const newState = {...state, team: {...state.team, pairHistory:[...currentHistory]}}
-    newState.team.pairHistory.push(
+    const currentHistory = this.props.team.pairHistory || [];
+    const newTeam = {...this.props.team, pairHistory:[...currentHistory]};
+    newTeam.pairHistory.push(
       {
-        id: newState.team.pairHistory.length,
+        id: newTeam.pairHistory.length,
         timeStamp:Date.now(),
-        pairs:newState.team.pairs
+        pairs:newTeam.pairs
       }
     )
-    putTeam(newState.team);
-    this.setState(newState);
+    putTeam(newTeam);
+    this.props.setTeam(newTeam);
   }
 
   shuffle(o) {
@@ -85,44 +64,41 @@ class PairList extends Component {
 	  return o;
   }
 
-  toggleUserLock(userId){
-    this.props.toggleLock(userId);
-  }
-
   moveUser(userId, stationId){
-    const newPairs = this.state.team.pairs.map(x=>{return {...x}})
-    const newState = {...this.state, team: {...this.state.team, pairs: newPairs}};
+    const newPairs = this.props.team.pairs.map(x=>{return {...x}})
+    const newTeam = {...this.props.team, pairs: newPairs};
 
-    this.removeUserFromAllLists(userId, newState);
+    this.removeUserFromAllLists(userId, newTeam);
 
-    const addToPair = newState.team.pairs.find(p=>p.stationId===stationId);
+    const addToPair = newTeam.pairs.find(p=>p.stationId===stationId);
     addToPair.users = [...addToPair.users, userId];
 
     //unlock user
     this.props.setLock(userId, false);
 
-    this.setState(newState);
+    this.props.setTeam(newTeam);
   }
 
   benchUser(userId){
-    const newState = {...this.state, team: { ...this.state.team, benchUserIds: [...this.state.team.benchUserIds, userId]} };
-    this.removeUserFromAllLists(userId, newState)
-    this.setState(newState);
+    const newTeam = { ...this.props.team, benchUserIds: [...this.props.team.benchUserIds, userId]};
+    this.removeUserFromAllLists(userId, newTeam)
+
+    this.props.setTeam(newTeam);
   }
 
-  removeUserFromAllLists(userId, newState){
-    const removeFromPair = newState.team.pairs.find(p=>p.users.find(x=>x===userId));
+  removeUserFromAllLists(userId, newTeam){
+    const removeFromPair = newTeam.pairs.find(p=>p.users.find(x=>x===userId));
     if (removeFromPair){
       removeFromPair.users = removeFromPair.users.filter(x=>x !== userId);
     } else {
-      newState.team.benchUserIds = newState.team.benchUserIds.filter(x=>x !== userId)
+      newTeam.benchUserIds = newTeam.benchUserIds.filter(x=>x !== userId)
     }
   }
 
   pairate(){
     let newPairs = [];
     let movingUsers = [];
-    let shuffledPairs = this.shuffle([...this.state.team.pairs])
+    let shuffledPairs = this.shuffle([...this.props.team.pairs])
     shuffledPairs.forEach(oldPair=>{
       let newPair = {stationId:oldPair.stationId, users:[]}
       oldPair.users.forEach(user=>{
@@ -145,12 +121,12 @@ class PairList extends Component {
       }
     })
 
-    const newState = {...this.state, team:{ ...this.state.team, pairs:newPairs} };
-    this.setState(newState);
+    const newTeam = { ...this.props.team, pairs:newPairs }
+    this.props.setTeam(newTeam);
   }
 
   isDirty(){
-    const team = this.state.team || {};
+    const team = this.props.team || {};
     const { pairs=[], pairHistory=[]} = team;
     if (pairHistory.length < 1) return true;
 
@@ -167,12 +143,11 @@ class PairList extends Component {
   }
 
   render() {
-    const { team = {} } = this.state;
-    const { users = {}, stations = {} } = this.props;
+
+    const { team = {}, users = {}, stations = {} } = this.props;
     const {pairs=[], benchUserIds=[], pairHistory=[]} = team;
 
     const pairate = ()=>this.pairate();
-    const toggleLock = userId=>this.toggleUserLock(userId);
     const lockInPairs = ()=> this.lockInPairs(this.state);
     const resetFromApi = ()=> this.fetchTeam();
 
@@ -184,7 +159,7 @@ class PairList extends Component {
         pair={p}
         users={users}
         stations={stations}
-        toggleLock={toggleLock}
+        toggleLock={this.props.toggleLock}
         moveUser={this.moveUser.bind(this)}
         pairHistory={pairHistory}
         key={index}/>);
@@ -214,7 +189,7 @@ class PairList extends Component {
 }
 
 const mapStateToProps = (state, ownProps)=>{
-  return { team: state.team, stations: state.stations, users: state.users }
+  return { team: state.team, stations: state.stations, users: state.users, bench: state.bench }
 }
 
 const mapDispatchToProps = (dispatch, ownProps)=>{
