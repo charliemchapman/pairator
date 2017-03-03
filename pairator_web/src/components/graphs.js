@@ -98,9 +98,6 @@ class Graphs extends Component {
 
     return (
       <div>
-        <h2>
-          { this.props.team.name }
-        </h2>
         <div className="graph">
           {charts}
         </div>

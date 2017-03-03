@@ -241,3 +241,18 @@ body {
 .userPieChart h2{
   text-align: center;
 }
+
+.team-header{
+  display:flex;
+  padding: 3px 55px;
+  position: absolute;
+  right: 0px;
+  top: 22px;
+}
+
+.team-header a{
+  color: #fff;
+  text-decoration: inherit;
+  font-weight: inherit;
+  padding-right: 15px;
+}
