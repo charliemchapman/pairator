@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import deepEqual from 'deep-equal';

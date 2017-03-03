@@ -1,19 +1,34 @@
 import React, { Component } from 'react';
-import { getTeamData } from '../actions/index';
+import { connect } from 'react-redux';
 
-export default class EditUsers extends Component {
-  constructor(props){
-    super(props);
-    this.state = {teams:[]};
-  }
-
-  componentWillMount(){
-    getTeamData(this.props.params.teamId);
-  }
+export class EditUsers extends Component {
 
   render() {
+    const users = Object.keys(this.props.users).map((userId,i)=>{
+      return (<div key={i}>{this.props.users[userId].name}</div>)
+    })
+
     return (
-      <h1>Edit Users!!!</h1>
+      <div>
+        <h1>Edit Users!!!</h1>
+        {users}
+      </div>
+
     );
   }
 }
+
+const mapStateToProps = (state, ownProps)=>{
+  return {
+    team: state.team,
+    users: state.users
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps)=>{
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditUsers);

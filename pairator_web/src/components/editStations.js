@@ -1,19 +1,34 @@
 import React, { Component } from 'react';
-import { getTeamData } from '../actions/index';
+import { connect } from 'react-redux';
 
-export default class EditStations extends Component {
-  constructor(props){
-    super(props);
-    this.state = {teams:[]};
-  }
-
-  componentWillMount(){
-    getTeamData(this.props.params.teamId);
-  }
+export class EditStations extends Component {
 
   render() {
+    const stations = Object.keys(this.props.stations).map((stationId,i)=>{
+      return (<div key={i}>{this.props.stations[stationId].name}</div>)
+    })
+
     return (
-      <h1>Edit Stations!!!</h1>
+      <div>
+        <h1>Edit Stations!!!</h1>
+        {stations}
+      </div>
+
     );
   }
 }
+
+const mapStateToProps = (state, ownProps)=>{
+  return {
+    team: state.team,
+    stations: state.stations
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps)=>{
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditStations);

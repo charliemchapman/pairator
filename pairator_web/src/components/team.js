@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { getTeamData } from '../actions/index';
 
-export default class Team extends Component {
-  constructor(props){
-    super(props);
-    this.state = {teams:[]};
-  }
-
+export class Team extends Component {
   componentWillMount(){
-    getTeamData(this.props.params.teamId);
+    this.props.getTeamData(this.props.params.teamId);
   }
 
   render() {
@@ -26,3 +22,16 @@ export default class Team extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps)=>{
+  return {
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps)=>{
+  return {
+    getTeamData: (teamId)=>dispatch(getTeamData(teamId))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Team);
