@@ -6,8 +6,8 @@ import deepEqual from 'deep-equal';
 import HTML5Backend from 'react-dnd-html5-backend';
 import Pair from './pair';
 import Bench from './bench';
-import { setTeam, addStation, addActiveUser, toggleLock, setLock } from '../actions/index';
-import { getTeam, putTeam, getUser, getStation } from '../pairatorApi';
+import { getTeamData, setTeam, toggleLock, setLock } from '../actions/index';
+import { putTeam } from '../pairatorApi';
 
 export const ItemTypes = {
   USER: 'user'
@@ -19,31 +19,7 @@ class PairList extends Component {
   }
 
   fetchTeam(){
-    getTeam(this.props.params.teamId).then((response)=>{
-      const users = {};
-       response.Item.userIds.forEach((userId, i)=>{
-        users[userId] = {id: userId}
-      });
-
-      const stations = {};
-      response.Item.stationIds.forEach((stationId, i)=>{
-        stations[stationId] = {id:stationId}
-      });
-
-      this.props.setTeam(response.Item);
-
-      Object.keys(users).forEach(userId=>{
-        getUser(userId).then(userResponse=>{
-          this.props.addUser(userResponse.Item)
-        })
-      })
-
-      Object.keys(stations).forEach(stationId=>{
-        getStation(stationId).then(stationResponse=>{
-          this.props.addStation(stationResponse.Item);
-        })
-      })
-    })
+    this.props.getTeamData(this.props.params.teamId);
   }
 
   lockInPairs(state){
@@ -197,10 +173,9 @@ const mapStateToProps = (state, ownProps)=>{
 const mapDispatchToProps = (dispatch, ownProps)=>{
   return {
     setTeam: (team)=>dispatch(setTeam(team)),
-    addStation: (station)=>dispatch(addStation(station)),
-    addUser: (user)=>dispatch(addActiveUser(user)),
     toggleLock: (userId)=>dispatch(toggleLock(userId)),
-    setLock: (userId, lock)=>dispatch(setLock(userId, lock))
+    setLock: (userId, lock)=>dispatch(setLock(userId, lock)),
+    getTeamData: (teamId)=>dispatch(getTeamData(teamId))
   }
 }
 

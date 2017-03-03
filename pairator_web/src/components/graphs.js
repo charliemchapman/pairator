@@ -56,7 +56,7 @@ class Graphs extends Component {
         if (pair.users.includes(userId)){
           pair.users.forEach(user=>{
             const userName = users[user] ? users[user].name : '';
-            if (userName && user != userId){
+            if (userName && user !== userId){
             if (!columns[userName]) {columns[userName] = 0}
               columns[userName] += 1;
             }
@@ -92,7 +92,7 @@ class Graphs extends Component {
 
   render() {
     let charts;
-    charts = Object.keys(this.props.users).filter(x=>x!='027be6f0-7eeb-4a95-9e1c-c57afa259857').map((user,i)=>{
+    charts = Object.keys(this.props.users).filter(x=>x!=='027be6f0-7eeb-4a95-9e1c-c57afa259857').map((user,i)=>{
       return this.getChart(user, this.props.users, this.props.team.pairHistory, i)
     })
 

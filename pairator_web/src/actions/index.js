@@ -1,3 +1,5 @@
+import { getTeam, getUser, getStation } from '../pairatorApi';
+
 export function setTeam(team){
   return {
     type: 'SET_TEAM',
@@ -39,4 +41,34 @@ export function setLock(userId, lock){
     userId: userId,
     lock: lock
   };
+}
+
+export function getTeamData(teamId){
+  return (dispatch, getState) => {
+    return getTeam(teamId).then((response)=>{
+      const users = {};
+       response.Item.userIds.forEach((userId, i)=>{
+        users[userId] = {id: userId}
+      });
+
+      const stations = {};
+      response.Item.stationIds.forEach((stationId, i)=>{
+        stations[stationId] = {id:stationId}
+      });
+
+      dispatch(setTeam(response.Item));
+
+      Object.keys(users).forEach(userId=>{
+        getUser(userId).then(userResponse=>{
+          dispatch(addUser(userResponse.Item))
+        })
+      })
+
+      Object.keys(stations).forEach(stationId=>{
+        getStation(stationId).then(stationResponse=>{
+          dispatch(addStation(stationResponse.Item));
+        })
+      })
+    })
+  }
 }

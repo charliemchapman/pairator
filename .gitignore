@@ -28,7 +28,7 @@ build/Release
 
 # Dependency directories
 node_modules
-build
+pairator_web/build
 jspm_packages
 
 # Optional npm cache directory
