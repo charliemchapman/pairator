@@ -152,12 +152,10 @@ class PairList extends Component {
         <button className='save-button blue-button' onClick={lockInPairs} disabled={!dirty}>Lock in</button>
         <button className='reset-button blue-button' onClick={resetFromApi} disabled={!dirty}>Reset</button>
         <div className='main'>
-          <div className='gutter'/>
           <div className='pair-list'>
             {pairDivs}
             {bench}
           </div>
-          <div className='gutter'/>
         </div>
       </div>
     );

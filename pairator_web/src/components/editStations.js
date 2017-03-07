@@ -5,13 +5,29 @@ export class EditStations extends Component {
 
   render() {
     const stations = Object.keys(this.props.stations).map((stationId,i)=>{
-      return (<div key={i}>{this.props.stations[stationId].name}</div>)
+      return (
+        <tr className="station-row" key={i}>
+          <td>{this.props.stations[stationId].name}</td>
+          <td>{this.props.stations[stationId].description}</td>
+        </tr>)
     })
 
     return (
       <div>
-        <h1>Edit Stations!!!</h1>
-        {stations}
+        <h1>Stations</h1>
+        <div className="edit-station">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stations}
+            </tbody>
+          </table>
+        </div>
       </div>
 
     );

@@ -43,6 +43,20 @@ export function setLock(userId, lock){
   };
 }
 
+export function resetUsersEditor(users){
+  return {
+    type: 'RESET_USERS_EDITOR',
+    users: users
+  };
+}
+
+export function toggleUsersEditorActive(userId){
+  return {
+    type: 'TOGGLE_USERS_EDITOR_ACTIVE',
+    userId: userId
+  };
+}
+
 export function getTeamData(teamId){
   return (dispatch, getState) => {
     return getTeam(teamId).then((response)=>{

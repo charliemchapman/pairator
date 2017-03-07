@@ -17,7 +17,9 @@ export class Team extends Component {
           <Link to={`/pairator/teams/${this.props.params.teamId}/users`}>Users</Link>
           <Link to={`/pairator/teams/${this.props.params.teamId}/graphs`}>Graphs</Link>
         </div>
-        {this.props.children}
+        <div className="team-content">
+          {this.props.children}
+        </div>
       </div>
     );
   }
