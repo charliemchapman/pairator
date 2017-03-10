@@ -1,4 +1,4 @@
-import { getTeam, getUser, getStation } from '../pairatorApi';
+import { getTeam, getUser, getStation, putUser } from '../pairatorApi';
 
 export function setTeam(team){
   return {
@@ -84,5 +84,15 @@ export function getTeamData(teamId){
         })
       })
     })
+  }
+}
+
+export function saveUsers(users){
+  return (dispatch, getState) => {
+    Object.keys(users).forEach(userId=>{
+      if (users[userId].isDirty){
+        putUser(users[userId]);
+      }
+    });
   }
 }

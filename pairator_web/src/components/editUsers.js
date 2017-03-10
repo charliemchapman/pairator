@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { resetUsersEditor, toggleUsersEditorActive } from '../actions/index';
+import { resetUsersEditor, toggleUsersEditorActive, saveUsers } from '../actions/index';
 
 export class EditUsers extends Component {
   componentWillMount(){
@@ -16,6 +16,10 @@ export class EditUsers extends Component {
   render() {
     const activeChange = (user)=>{
       this.props.toggleUsersEditorActive(user.userId);
+    }
+
+    const saveUsers = () => {
+      this.props.saveUsers(this.props.usersEditor);
     }
 
     const users = Object.keys(this.props.usersEditor).map((userId,i)=>{
@@ -46,6 +50,7 @@ export class EditUsers extends Component {
               {users}
             </tbody>
           </table>
+          <button className="blue-button" onClick={saveUsers}>Save</button>
         </div>
       </div>
 
@@ -64,7 +69,8 @@ const mapStateToProps = (state, ownProps)=>{
 const mapDispatchToProps = (dispatch, ownProps)=>{
   return {
     resetUsersEditor: (users)=>dispatch(resetUsersEditor(users)),
-    toggleUsersEditorActive: (userId)=>dispatch(toggleUsersEditorActive(userId))
+    toggleUsersEditorActive: (userId)=>dispatch(toggleUsersEditorActive(userId)),
+    saveUsers: (users)=>dispatch(saveUsers(users))
   }
 }
 
